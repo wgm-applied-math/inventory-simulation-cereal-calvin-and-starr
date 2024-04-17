@@ -77,6 +77,9 @@ for k = 1:NumSamples
     BacklogDaysPerSample(1,k) = backlogDays;
 end
 
+% Print the mean fraction of days with a non zero backlog
+meanBacklogDays = mean(BacklogDaysPerSample/MaxTime);
+fprintf("Mean fraction of days with a non-zero backlog: %f\n", meanBacklogDays);
 
 % Express it as cost per day and compute the mean, so that we get a number
 % that doesn't depend directly on how many time steps the samples run for.
@@ -100,6 +103,10 @@ for i =1:length(InventorySamples)
     backlogfracvec(end+1) = backlogfrac;
 end
 
+% print the mean fraction of orders that get backloged
+meanBacklogFrac = mean(backlogfracvec);
+fprintf("Mean fraction of orders that get backlogged: %f\n", meanBacklogFrac);
+
 fig2 = figure();
 t2 = tiledlayout(fig2,1,1);
 ax2 = nexttile(t2);
@@ -120,6 +127,10 @@ for i =1:length(InventorySamples)
         end
     end
 end
+
+% print mean total backlog for days with a non zero backlog
+meanBacklog = mean(totalbacklogvec);
+fprintf("Mean total backlog on days with a non-zero backlog: %f\n", meanBacklog);
 
 fig3 = figure();
 t3 = tiledlayout(fig3,1,1);
@@ -143,6 +154,10 @@ for i =1:length(InventorySamples)
         end
     end
 end
+
+% print mean delay time
+meanDelay = mean(delayvec);
+fprintf("Mean delay time for orders that get backlogged: %f\n", meanDelay);
 
 fig4 = figure();
 t4 = tiledlayout(fig4,1,1);
