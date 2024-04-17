@@ -23,12 +23,18 @@ ROP = 50;
 Q = 200;
 
 % How many samples of the simulation to run.
-NumSamples = 100;
+NumSamples = 10;
 
 % Run each sample for this many days.
-MaxTime = 1000;
+MaxTime = 100;
 
 %% Run simulation samples
+
+
+
+
+
+
 
 % Make this reproducible
 rng("default");
@@ -63,6 +69,76 @@ meanDailyCost = mean(TotalCosts/MaxTime);
 fprintf("Mean daily cost: %f\n", meanDailyCost);
 
 %% Make pictures
+
+backlogfracvec= [];
+for i =1:length(InventorySamples)
+    backlogcount = 0;
+    totalorders = length(InventorySamples{i,1}.Fulfilled) + length(InventorySamples{i,1}.Backlog);
+    for j = 1:(length(InventorySamples{i,1}.Fulfilled))
+        if InventorySamples{i,1}.Fulfilled{1,j}.OriginalTime ~= InventorySamples{i,1}.Fulfilled{1,j}.Time
+            backlogcount = backlogcount + 1;
+        end
+    end
+    backlogcount = backlogcount + length(InventorySamples{i,1}.Backlog);
+    backlogfrac = backlogcount/totalorders;
+    backlogfracvec(end+1) = backlogfrac;
+end
+
+fig2 = figure();
+t2 = tiledlayout(fig2,1,1);
+ax2 = nexttile(t2);
+
+histogram(ax2, backlogfracvec, Normalization="probability")
+title("Fraction of Orders the Get Backlogged Histogram")
+xlabel(ax2,"Fraction of Orders That Get Backloged")
+ylabel(ax2,"Probability")
+
+
+%For days that experience a backlog, the total backlog amount
+totalbacklogvec = [];
+for i =1:length(InventorySamples)
+    for j = 1:MaxTime+1
+        comp = InventorySamples{i,1}.Log.Backlog(j);
+        if comp > 0
+            totalbacklogvec(end+1) = InventorySamples{i,1}.Log.Backlog(j);
+        end
+    end
+end
+
+fig3 = figure();
+t3 = tiledlayout(fig3,1,1);
+ax3 = nexttile(t3);
+
+
+histogram(ax3, totalbacklogvec, Normalization="probability")
+title("Total Backlog Amount For Days With Non-Zero Backlog")
+xlabel(ax3,"Backlog Amount")
+ylabel(ax3,"Probability")
+
+
+
+%Delay Time
+delayvec = [];
+for i =1:length(InventorySamples)
+    for j = 1:(length(InventorySamples{i,1}.Fulfilled))
+        if InventorySamples{i,1}.Fulfilled{1,j}.OriginalTime ~= InventorySamples{i,1}.Fulfilled{1,j}.Time
+            delaytime = InventorySamples{i,1}.Fulfilled{1,j}.Time - InventorySamples{i,1}.Fulfilled{1,j}.OriginalTime;
+            delayvec(end+1) = delaytime;
+        end
+    end
+end
+
+fig4 = figure();
+t4 = tiledlayout(fig4,1,1);
+ax4 = nexttile(t4);
+
+histogram(ax4, delayvec, Normalization="probability")
+title("Delay Time of Orders That Get Backlogged")
+xlabel(ax4,"Delay")
+ylabel(ax4,"Probability")
+
+
+
 
 % Make a figure with one set of axes.
 fig = figure();
