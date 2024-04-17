@@ -23,17 +23,13 @@ ROP = 50;
 Q = 200;
 
 % How many samples of the simulation to run.
-NumSamples = 10;
+NumSamples = 50;
+
 
 % Run each sample for this many days.
 MaxTime = 100;
 
 %% Run simulation samples
-
-
-
-
-
 
 
 % Make this reproducible
@@ -63,12 +59,32 @@ end
 % Pull the RunningCost from each complete sample.
 TotalCosts = cellfun(@(i) i.RunningCost, InventorySamples);
 
+% record days with backlog
+BacklogDaysPerSample = zeros(1,NumSamples);
+
+for k = 1:NumSamples
+    inventory = InventorySamples{k};
+    backlogDays = 0;
+
+    Temp = inventory.Log.Backlog;
+
+    for i = 1:MaxTime
+        u = Temp(i);
+        if  u > 0
+            backlogDays = backlogDays + 1;
+        end
+    end
+    BacklogDaysPerSample(1,k) = backlogDays;
+end
+
+
 % Express it as cost per day and compute the mean, so that we get a number
 % that doesn't depend directly on how many time steps the samples run for.
 meanDailyCost = mean(TotalCosts/MaxTime);
 fprintf("Mean daily cost: %f\n", meanDailyCost);
 
 %% Make pictures
+
 
 backlogfracvec= [];
 for i =1:length(InventorySamples)
@@ -138,6 +154,17 @@ xlabel(ax4,"Delay")
 ylabel(ax4,"Probability")
 
 
+% create hustogram for days with non-zero backlog
+
+f = figure('Name','Backlog days per sample');
+ft = tiledlayout(f,1,1);
+axf = nexttile(ft);
+
+
+b = histogram(axf, BacklogDaysPerSample/MaxTime, Normalization="probability", BinWidth=.05);
+
+xlabel(axf, "Fraction of days with non-zero backlog");
+ylabel(axf, "Probability");
 
 
 % Make a figure with one set of axes.
@@ -145,6 +172,8 @@ fig = figure();
 t = tiledlayout(fig,1,1);
 ax = nexttile(t);
 
+
+  
 % Histogram of the cost per day.
 h = histogram(ax, TotalCosts/MaxTime, Normalization="probability", ...
     BinWidth=5);
