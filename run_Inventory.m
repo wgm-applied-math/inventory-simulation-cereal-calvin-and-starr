@@ -59,6 +59,16 @@ end
 % Pull the RunningCost from each complete sample.
 TotalCosts = cellfun(@(i) i.RunningCost, InventorySamples);
 
+
+% Express it as cost per day and compute the mean, so that we get a number
+% that doesn't depend directly on how many time steps the samples run for.
+meanDailyCost = mean(TotalCosts/MaxTime);
+fprintf("Mean daily cost: %f\n", meanDailyCost);
+
+
+
+%% Make pictures
+
 % record days with backlog
 BacklogDaysPerSample = zeros(1,NumSamples);
 
@@ -81,11 +91,6 @@ end
 meanBacklogDays = mean(BacklogDaysPerSample/MaxTime);
 fprintf("Mean fraction of days with a non-zero backlog: %f\n", meanBacklogDays);
 
-% Express it as cost per day and compute the mean, so that we get a number
-% that doesn't depend directly on how many time steps the samples run for.
-meanDailyCost = mean(TotalCosts/MaxTime);
-fprintf("Mean daily cost: %f\n", meanDailyCost);
-
 fig1 = figure();
 t1 = tiledlayout(fig1,1,1);
 ax1 = nexttile(t1);
@@ -95,9 +100,8 @@ title("Fraction of Days With Non-Zero Backlog")
 xlabel(ax1,"Fraction of Days That Have Backlog")
 ylabel(ax1,"Probability")
 
-%% Make pictures
 
-
+%backlog order fraction
 backlogfracvec= [];
 for i =1:length(InventorySamples)
     backlogcount = 0;
