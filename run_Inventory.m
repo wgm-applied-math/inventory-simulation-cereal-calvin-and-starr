@@ -184,15 +184,15 @@ ylabel(ax4,"Probability")
 
 % create hustogram for days with non-zero backlog
 
-f = figure('Name','Backlog days per sample');
-ft = tiledlayout(f,1,1);
-axf = nexttile(ft);
+%f = figure('Name','Backlog days per sample');
+%ft = tiledlayout(f,1,1);
+%axf = nexttile(ft);
 
 
-b = histogram(axf, BacklogDaysPerSample/MaxTime, Normalization="probability", BinWidth=.05);
+%b = histogram(axf, BacklogDaysPerSample/MaxTime, Normalization="probability", BinWidth=.05);
 
-xlabel(axf, "Fraction of days with non-zero backlog");
-ylabel(axf, "Probability");
+%xlabel(axf, "Fraction of days with non-zero backlog");
+%ylabel(axf, "Probability");
 
 
 % Make a figure with one set of axes.
