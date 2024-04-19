@@ -17,17 +17,17 @@ L = 2;
 h = 0.05/7;
 
 % Reorder point.
-ROP = 50;
+ROP = 141;
 
 % Batch size.
-Q = 200;
+Q = 757;
 
 % How many samples of the simulation to run.
-NumSamples = 50;
+NumSamples = 100;
 
 
 % Run each sample for this many days.
-MaxTime = 100;
+MaxTime = 1000;
 
 %% Run simulation samples
 
@@ -85,6 +85,15 @@ fprintf("Mean fraction of days with a non-zero backlog: %f\n", meanBacklogDays);
 % that doesn't depend directly on how many time steps the samples run for.
 meanDailyCost = mean(TotalCosts/MaxTime);
 fprintf("Mean daily cost: %f\n", meanDailyCost);
+
+fig1 = figure();
+t1 = tiledlayout(fig1,1,1);
+ax1 = nexttile(t1);
+
+histogram(ax1, BacklogDaysPerSample/MaxTime, Normalization="probability")
+title("Fraction of Days With Non-Zero Backlog")
+xlabel(ax1,"Fraction of Days That Have Backlog")
+ylabel(ax1,"Probability")
 
 %% Make pictures
 
