@@ -12,6 +12,16 @@ c = 3.00;
 
 % Lead time for production requests.
 L = 2;
+random_number=rand;
+if random_number <= .1
+    L = 2;
+elseif random_number <= .3 && random_number > .1
+    L = 3;
+elseif random_number <= .7 && random_number > .3
+    L = 4;
+elseif random_number <= 1 && random_number > .7
+    L = 5;
+end
 
 % Holding cost per unit per day.
 h = 0.05/7;
@@ -23,10 +33,10 @@ ROP = 50;
 Q = 200;
 
 % How many samples of the simulation to run.
-NumSamples = 100;
+NumSamples = 10;
 
 % Run each sample for this many days.
-MaxTime = 1000;
+MaxTime = 100;
 
 %% Run simulation samples
 
