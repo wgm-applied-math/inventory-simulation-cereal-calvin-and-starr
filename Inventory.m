@@ -196,8 +196,20 @@ classdef Inventory < handle
                 order_cost = obj.RequestCostPerBatch ...
                     + obj.RequestBatchSize * obj.RequestCostPerUnit;
                 obj.RunningCost = obj.RunningCost + order_cost;
+                
+                random_number=rand;
+                if random_number <= .1
+                    shiptime = 2;
+                elseif random_number <= .3 && random_number > .1
+                    shiptime = 3;
+                elseif random_number <= .7 && random_number > .3
+                    shiptime = 4;
+                elseif random_number <= 1 && random_number > .7
+                    shiptime = 5;
+                end
+                
                 arrival = ShipmentArrival( ...
-                    Time=floor(obj.Time+obj.RequestLeadTime), ...
+                    Time=floor(obj.Time+shiptime), ...
                     Amount=obj.RequestBatchSize);
                 schedule_event(obj, arrival);
                 obj.RequestPlaced = true;
